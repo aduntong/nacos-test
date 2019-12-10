@@ -38,7 +38,13 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
                 .authorizedGrantTypes("authorization_code")  //授权类型，授权码
                 .scopes("app")   //范围
                 .redirectUris("http://localhost:9006/login"); //重定向地址
-
     }
-
+    @Override
+    public void configure( AuthorizationServerSecurityConfigurer security ) throws Exception {
+        // 对获取Token的请求不再拦截
+        security.tokenKeyAccess( "permitAll()" )
+                // 验证获取Token的验证信息
+                .checkTokenAccess( "isAuthenticated()" )
+                .allowFormAuthenticationForClients().passwordEncoder( passwordEncoder() );
+    }
 }
